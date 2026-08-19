@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clôture Journalière</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-view" class="login-wrap">
+  <form class="login-card" id="login-form">
+    <h1>Clôture Journalière</h1>
+    <div class="sub">Accès Gérant</div>
+    <div class="login-field">
+      <label for="login-email">Email</label>
+      <input type="email" id="login-email" autocomplete="username" required>
+    </div>
+    <div class="login-field">
+      <label for="login-password">Mot de passe</label>
+      <input type="password" id="login-password" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn-primary login-btn" type="submit" id="login-btn">Se connecter</button>
+    <div class="login-error" id="login-error"></div>
+  </form>
+</div>
+
+<!-- App (populated after login) -->
+<div id="app-view" style="display:none;"></div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
