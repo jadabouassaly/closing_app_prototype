@@ -144,11 +144,23 @@ header.top{
   align-items:center;
   flex-wrap:wrap;
 }
-.day-controls input[type=date], .month-controls-row input[type=month]{
+/* Day controls sit on the dark header, so they carry the cream ink. */
+.day-controls input[type=date]{
   font-family:'IBM Plex Mono',monospace;
   background:transparent;
   border:1px solid #3A3F45;
   color:var(--paper);
+  padding:7px 10px;
+  border-radius:4px;
+  font-size:0.85rem;
+}
+/* The month controls live inside a cream card, so they use the ink palette.
+   Reusing the dark-header colours here renders them invisible. */
+.month-controls-row input[type=month]{
+  font-family:'IBM Plex Mono',monospace;
+  background:#fff;
+  border:1px solid var(--line);
+  color:var(--ink);
   padding:7px 10px;
   border-radius:4px;
   font-size:0.85rem;
@@ -168,6 +180,9 @@ header.top{
 .btn-primary:disabled{background:var(--ink-soft); cursor:default;}
 .btn-ghost{background:transparent; color:var(--paper); border:1px solid #3A3F45;}
 .btn-ghost:hover{border-color:var(--brass); color:var(--brass);}
+/* Same reason as the month input: a ghost button on cream needs ink, not paper. */
+.card .btn-ghost{color:var(--ink); border-color:var(--line);}
+.card .btn-ghost:hover{border-color:var(--brass); color:var(--brass);}
 select.load-select{
   font-family:'IBM Plex Mono',monospace;
   background:#1C2024;

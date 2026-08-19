@@ -90,14 +90,15 @@ export async function loadDay(dateStr) {
   state.espece_compte = head.espece_compte ?? null;
 
   // Child rows, one query per table.
+  //
+  // Deliberately unordered. Child `id` is a random UUID, so ordering by it
+  // shuffles the manager's rows; there is no position/created_at column to sort
+  // on. Because saveDay() deletes and re-inserts each table's rows in a single
+  // statement, the heap order PostgREST returns is the order they were entered.
+  // A `position` column would make this a guarantee rather than a consequence —
+  // see SCHEMA-NOTES.md.
   const results = await Promise.all(
-    SECTION_KEYS.map(table =>
-      supabase
-        .from(table)
-        .select('*')
-        .eq('closing_id', head.id)
-        .order('id', { ascending: true })
-    )
+    SECTION_KEYS.map(table => supabase.from(table).select('*').eq('closing_id', head.id))
   );
   results.forEach((res, i) => {
     if (res.error) throw res.error;

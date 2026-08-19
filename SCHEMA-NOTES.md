@@ -41,8 +41,25 @@ Table and column naming is mixed French/English. All of it is confined to
   not child tables — so the eight child tables map one-to-one onto the
   prototype's eight repeating sections.
 
+## Row ordering (known limitation)
+
+Child rows have a **UUID** primary key and no `position`, `sort_order`, or
+`created_at` column, so there is nothing to sort a manager's lines by. Ordering
+by `id` shuffles them. `loadDay()` therefore issues no `ORDER BY` and relies on
+PostgREST returning heap order, which matches entry order because `saveDay()`
+deletes and re-inserts each table's rows in one statement.
+
+That works reliably today but Postgres does not guarantee heap order. Adding an
+integer `position` column to each of the eight child tables would make it a
+guarantee. That is a schema change, so it has not been made.
+
 ## RLS
 
-Anon can `SELECT` every table. `INSERT` is rejected
+Anon can `SELECT` most tables; `INSERT` is rejected
 (`42501 new row violates row-level security policy`), so all writes require an
 authenticated session — consistent with the single-manager login.
+
+`categories` is stricter: `SELECT` is limited to authenticated users (anon sees
+zero rows), and there is no `INSERT` policy at all, even for authenticated
+users. Seed or edit that list from the Supabase SQL editor or dashboard. The
+app only ever reads it, and only after login, so this is fine.
