@@ -1,4 +1,5 @@
 import './style.css';
+import { configError } from './supabaseClient.js';
 import { getSession, signIn, signOut, onAuthChange, authErrorMessage } from './auth.js';
 import { initDayView } from './dayView.js';
 import { initMonthView } from './monthView.js';
@@ -15,6 +16,10 @@ let appReady = false;
 
 loginForm.addEventListener('submit', async e => {
   e.preventDefault();
+  if (configError) {
+    loginError.textContent = configError;
+    return;
+  }
   loginError.textContent = '';
   loginBtn.disabled = true;
   loginBtn.textContent = 'Connexion…';
@@ -95,19 +100,26 @@ async function showApp(session) {
 
 // ---------- Boot ----------
 
-onAuthChange(session => {
-  if (session) showApp(session);
-  else showLogin();
-});
-
-(async () => {
-  try {
-    const session = await getSession();
-    if (session) await showApp(session);
+if (configError) {
+  // Nothing can work without credentials; say so instead of failing silently.
+  showLogin();
+  loginError.textContent = configError;
+  loginBtn.disabled = true;
+} else {
+  onAuthChange(session => {
+    if (session) showApp(session);
     else showLogin();
-  } catch (err) {
-    console.error(err);
-    showLogin();
-    loginError.textContent = authErrorMessage(err);
-  }
-})();
+  });
+
+  (async () => {
+    try {
+      const session = await getSession();
+      if (session) await showApp(session);
+      else showLogin();
+    } catch (err) {
+      console.error(err);
+      showLogin();
+      loginError.textContent = authErrorMessage(err);
+    }
+  })();
+}
